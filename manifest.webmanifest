@@ -1,0 +1,11 @@
+{
+  "name": "CatatDuit — Uang Jajan",
+  "short_name": "CatatDuit",
+  "description": "Pencatat uang jajan dan pengeluaran pribadi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080a0f",
+  "theme_color": "#080a0f",
+  "icons": []
+}

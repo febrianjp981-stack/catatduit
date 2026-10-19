@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080a0f">
+<meta name="description" content="CatatDuit, pencatat uang jajan dan pengeluaran pribadi.">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>CatatDuit — Uang Jajan</title>
+<style>
+:root{color-scheme:dark;--bg:#080a0f;--panel:#11151e;--panel2:#191f2b;--line:#293142;--text:#f4f6fa;--muted:#98a4b7;--green:#70efaa;--red:#ff7d8a;--blue:#8db7ff;--yellow:#ffd477}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#151d2b 0%,var(--bg) 58%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:1080px;margin:auto;padding:22px 15px 45px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:45px;height:45px;border-radius:15px;background:linear-gradient(135deg,#70efaa,#4ab8a0);color:#06120b;font-size:25px;font-weight:900}.brand h1{font-size:23px;margin:0;letter-spacing:-.6px}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap}button,.filebtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 13px;border-radius:11px;font-weight:650;font-size:13px;cursor:pointer}button:hover,.filebtn:hover{filter:brightness(1.12)}button.primary{background:var(--green);color:#06120b;border-color:var(--green)}button.danger{color:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
+.syncbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#111722;border:1px solid var(--line);padding:11px 13px;border-radius:13px;margin-bottom:14px;font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:var(--yellow);flex-shrink:0}.dot.ok{background:var(--green)}.dot.err{background:var(--red)}.syncbar span:nth-child(2){flex:1;min-width:150px}.linkbtn{background:transparent;border:0;padding:3px;color:var(--blue);text-decoration:underline}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:15px}.card,.panel{background:rgba(17,21,30,.96);border:1px solid var(--line);border-radius:18px;padding:17px;min-width:0}.label{color:var(--muted);font-size:13px}.amount{font-size:clamp(20px,3vw,29px);font-weight:800;letter-spacing:-.7px;margin-top:7px;overflow-wrap:anywhere}.green{color:var(--green)}.red{color:var(--red)}.small{font-size:12px;color:var(--muted);margin-top:5px}.layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.2fr);gap:15px}.panel h2{font-size:17px;margin:0 0 14px}.field{margin-bottom:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}input,select{width:100%;padding:11px 12px;background:#0a0d13;color:var(--text);border:1px solid var(--line);border-radius:10px;font:inherit;min-width:0}input:focus,select:focus{outline:2px solid #527b67;border-color:transparent}.type-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.type-switch button{padding:11px}.type-switch button.active.income{background:#163727;border-color:#347e50;color:var(--green)}.type-switch button.active.expense{background:#402129;border-color:#8c3d4b;color:var(--red)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.form-actions{display:flex;gap:8px}.form-actions button{flex:1}.notice{font-size:12px;color:var(--muted);margin-top:12px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.section-head h2{margin:0}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.transactions{display:flex;flex-direction:column;gap:8px}.tx{display:flex;align-items:center;gap:10px;padding:10px;background:#0b0f16;border:1px solid #252e3c;border-radius:12px}.txicon{width:36px;height:36px;display:grid;place-items:center;background:#202838;border-radius:11px;font-size:18px;flex-shrink:0}.txmain{flex:1;min-width:0}.txname{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.txmeta{font-size:12px;color:var(--muted);margin-top:2px}.txright{text-align:right;flex-shrink:0}.txamount{font-weight:800;font-size:14px}.txamount.income{color:var(--green)}.txamount.expense{color:var(--red)}.delete{padding:4px 7px;margin-top:4px;font-size:11px}.empty{text-align:center;padding:28px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:12px}.goalbox{margin-top:18px}.goalrow{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:13px}.progress{height:9px;background:#293243;border-radius:20px;overflow:hidden;margin:10px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#70efaa,#71c6ff);border-radius:20px}.goalform{display:flex;gap:8px;margin-top:10px}.goalform input{flex:1}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}.hidden{display:none!important}
+.modalback{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}.modal{width:min(520px,100%);max-height:90vh;overflow:auto;background:#111722;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 20px 80px #0009}.modal h2{margin:0 0 8px}.modal p{color:var(--muted);font-size:13px}.modal .field{margin-top:12px}.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.modal-actions button{flex:1}
+@media(max-width:760px){.cards{grid-template-columns:1fr;gap:8px}.card{padding:13px}.amount{font-size:25px;margin-top:3px}.layout{grid-template-columns:1fr}.wrap{padding:15px 11px 35px}.panel{padding:14px}.top{align-items:flex-start}.brand h1{font-size:21px}.actions{width:100%}.actions button,.actions .filebtn{flex:1;text-align:center}.tx{padding:8px;gap:8px}.txicon{width:32px;height:32px}.txamount{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="logo">₿</div><div><h1>CatatDuit</h1><p>Uang jajan · catat, pantau, tabung</p></div></div>
+ <div class="actions"><button id="syncNow">⟳ Sinkronkan</button><button id="backupBtn">Backup JSON</button><label class="filebtn" for="importFile">Pulihkan</label><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div>
+</header>
+<div class="syncbar"><span id="syncDot" class="dot"></span><span id="syncStatus">Mode lokal — hubungkan cloud untuk sinkronisasi HP dan laptop.</span><button class="linkbtn" id="cloudSettings">Pengaturan cloud</button></div>
+<section class="cards">
+ <div class="card"><div class="label">💰 Saldo saat ini</div><div class="amount" id="balance">Rp0</div><div class="small">Total pemasukan dikurangi pengeluaran</div></div>
+ <div class="card"><div class="label">📥 Uang masuk bulan ini</div><div class="amount green" id="incomeTotal">Rp0</div><div class="small" id="incomeCount">0 transaksi</div></div>
+ <div class="card"><div class="label">📤 Uang keluar bulan ini</div><div class="amount red" id="expenseTotal">Rp0</div><div class="small" id="expenseCount">0 transaksi</div></div>
+</section>
+<div class="layout">
+<section class="panel">
+ <h2 id="formTitle">Tambah transaksi</h2>
+ <div class="type-switch"><button id="incomeType" class="active income" type="button">＋ Uang masuk</button><button id="expenseType" type="button">－ Uang keluar</button></div>
+ <form id="txForm">
+  <div class="field"><label for="description">Keterangan</label><input id="description" maxlength="90" placeholder="Contoh: uang jajan mingguan" required></div>
+  <div class="form-grid">
+   <div class="field"><label for="amount">Nominal (Rp)</label><input id="amount" type="number" min="1" step="1" inputmode="numeric" placeholder="25000" required></div>
+   <div class="field"><label for="category">Kategori</label><select id="category"></select></div>
+   <div class="field full"><label for="date">Tanggal transaksi</label><input id="date" type="date" required></div>
+  </div>
+  <div class="form-actions"><button class="primary" id="saveBtn" type="submit">Simpan transaksi</button><button id="cancelEdit" class="hidden" type="button">Batal</button></div>
+ </form>
+ <div class="goalbox"><h2 style="margin-top:20px">🎯 Target tabungan</h2><div class="goalrow"><span id="goalLabel">Belum ada target</span><strong id="goalPercent">0%</strong></div><div class="progress"><div class="bar" id="goalBar"></div></div><div class="goalform"><input id="goalInput" type="number" min="0" step="1000" inputmode="numeric" placeholder="Target, mis. 500000"><button id="saveGoal" type="button">Atur</button></div><div class="notice">Progress berdasarkan saldo tercatat. Masukkan saldo awal sebagai pemasukan bila ingin menghitung uang yang sudah dimiliki.</div></div>
+</section>
+<section class="panel">
+ <div class="section-head"><h2>Riwayat transaksi</h2><span class="small" id="txCount">0 transaksi</span></div>
+ <div class="filters"><input id="search" placeholder="Cari transaksi..." aria-label="Cari transaksi"><select id="filterType" aria-label="Filter jenis"><option value="all">Semua jenis</option><option value="income">Uang masuk</option><option value="expense">Uang keluar</option></select><select id="filterMonth" aria-label="Filter bulan"><option value="all">Semua bulan</option></select><select id="sortBy" aria-label="Urutan"><option value="newest">Terbaru dulu</option><option value="oldest">Terlama dulu</option><option value="largest">Nominal terbesar</option></select></div>
+ <div id="transactions" class="transactions"></div>
+</section>
+</div>
+<div class="footer">Data lokal disimpan di browser ini. Sinkronisasi cloud memerlukan konfigurasi Supabase. Backup berkala tetap disarankan.</div>
+</div>
+<div id="modalRoot"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(()=> {
+const KEY='catatduit_cloud_v1', CFG='catatduit_cloud_config_v1';
+const categories={income:['Uang jajan','Hadiah','Bonus','Jual barang','Lainnya'],expense:['Makan & minum','Transportasi','Jajan','Game & top up','Paket data','Belanja','Sekolah','Nongkrong','Lainnya']};
+const $=id=>document.getElementById(id);
+const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+let data={transactions:[],goal:0},type='income',editingId=null,client=null,user=null,config=null,syncing=false,onlineHandler=null;
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Array.isArray(s.transactions))data={transactions:s.transactions,goal:Number(s.goal)||0}}catch(e){}
+try{config=JSON.parse(localStorage.getItem(CFG)||'null')}catch(e){}
+$('date').value=today();
+function setStatus(msg,state=''){ $('syncStatus').textContent=msg;$('syncDot').className='dot '+state }
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){alert('Penyimpanan browser penuh. Ekspor backup sekarang.');return false}}
+function fillCategories(selected){$('category').innerHTML=categories[type].map(c=>`<option>${c}</option>`).join('');if(selected&&categories[type].includes(selected))$('category').value=selected}
+function setType(next){type=next;$('incomeType').classList.toggle('active',type==='income');$('expenseType').classList.toggle('active',type==='expense');$('incomeType').classList.toggle('income',type==='income');$('expenseType').classList.toggle('expense',type==='expense');fillCategories()}
+$('incomeType').onclick=()=>setType('income');$('expenseType').onclick=()=>setType('expense');
+function monthKey(d){return String(d||'').slice(0,7)}
+function monthName(k){if(!k)return '';const [y,m]=k.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ const now=today().slice(0,7),all=data.transactions;
+ const inc=all.filter(t=>t.type==='income'&&monthKey(t.date)===now),exp=all.filter(t=>t.type==='expense'&&monthKey(t.date)===now);
+ const sum=a=>a.reduce((s,t)=>s+Number(t.amount||0),0),balance=all.reduce((s,t)=>s+(t.type==='income'?1:-1)*Number(t.amount||0),0);
+ $('balance').textContent=rupiah(balance);$('balance').style.color=balance<0?'var(--red)':'var(--text)';
+ $('incomeTotal').textContent=rupiah(sum(inc));$('expenseTotal').textContent=rupiah(sum(exp));$('incomeCount').textContent=`${inc.length} transaksi bulan ini`;$('expenseCount').textContent=`${exp.length} transaksi bulan ini`;
+ $('goalLabel').textContent=data.goal>0?`${rupiah(Math.max(0,balance))} dari ${rupiah(data.goal)}`:'Belum ada target';let pct=data.goal>0?Math.min(100,Math.floor(Math.max(0,balance)/data.goal*100)):0;$('goalPercent').textContent=pct+'%';$('goalBar').style.width=pct+'%';$('goalInput').value=data.goal||'';
+ const months=[...new Set(all.map(t=>monthKey(t.date)).filter(Boolean))].sort().reverse(),old=$('filterMonth').value;
+ $('filterMonth').innerHTML='<option value="all">Semua bulan</option>'+months.map(m=>`<option value="${m}">${monthName(m)}</option>`).join('');$('filterMonth').value=months.includes(old)||old==='all'?old:'all';
+ let list=all.filter(t=>{const q=$('search').value.trim().toLowerCase();return(!q||`${t.description} ${t.category}`.toLowerCase().includes(q))&&($('filterType').value==='all'||t.type===$('filterType').value)&&($('filterMonth').value==='all'||monthKey(t.date)===$('filterMonth').value)});
+ const sort=$('sortBy').value;list.sort((a,b)=>sort==='largest'?Number(b.amount)-Number(a.amount):sort==='oldest'?(a.date||'').localeCompare(b.date||''):((b.date||'').localeCompare(a.date||'')||Number(b.createdAt||0)-Number(a.createdAt||0)));
+ $('txCount').textContent=`${list.length} transaksi`;
+ if(!list.length){$('transactions').innerHTML='<div class="empty">Belum ada transaksi yang cocok.<br>Tambah catatan pertamamu di sebelah kiri.</div>';return}
+ $('transactions').innerHTML=list.map(t=>{const income=t.type==='income',date=t.date?new Date(t.date+'T12:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'Tanggal tidak diketahui';return `<div class="tx"><div class="txicon">${income?'↙':'↗'}</div><div class="txmain"><div class="txname">${esc(t.description)}</div><div class="txmeta">${esc(t.category)} · ${date}</div></div><div class="txright"><div class="txamount ${income?'income':'expense'}">${income?'+':'−'}${rupiah(t.amount)}</div><button class="delete" data-edit="${esc(t.id)}">Edit</button> <button class="delete danger" data-delete="${esc(t.id)}">Hapus</button></div></div>`}).join('');
+}
+function resetForm(){editingId=null;$('txForm').reset();$('date').value=today();$('formTitle').textContent='Tambah transaksi';$('saveBtn').textContent='Simpan transaksi';$('cancelEdit').classList.add('hidden');setType('income')}
+$('cancelEdit').onclick=resetForm;
+$('txForm').onsubmit=async e=>{e.preventDefault();const amount=Number($('amount').value);if(!Number.isFinite(amount)||amount<=0){alert('Nominal harus lebih dari Rp0.');return}
+ const record={id:editingId||crypto.randomUUID?.()||`${Date.now()}_${Math.random().toString(36).slice(2,8)}`,type,description:$('description').value.trim(),amount:Math.round(amount),category:$('category').value,date:$('date').value,createdAt:Date.now(),updatedAt:new Date().toISOString()};
+ if(!record.description||!record.date)return;
+ if(editingId){const i=data.transactions.findIndex(t=>t.id===editingId);if(i>=0)data.transactions[i]=record}else data.transactions.push(record);
+ persist();resetForm();render();if(client&&user)await upsertOne(record);
+};
+$('transactions').onclick=async e=>{const del=e.target.closest('[data-delete]'),edit=e.target.closest('[data-edit]');
+ if(del){const t=data.transactions.find(x=>x.id===del.dataset.delete);if(t&&confirm(`Hapus transaksi "${t.description}"?`)){data.transactions=data.transactions.filter(x=>x.id!==t.id);persist();if(editingId===t.id)resetForm();render();if(client&&user){const {error}=await client.from('transactions').delete().eq('id',t.id).eq('user_id',user.id);if(error)setStatus('Penghapusan tersimpan lokal, tetapi gagal dikirim ke cloud. Tekan Sinkronkan.','err');else setStatus('Transaksi dihapus dan cloud diperbarui.','ok')}}}
+ if(edit){const t=data.transactions.find(x=>x.id===edit.dataset.edit);if(!t)return;editingId=t.id;setType(t.type);$('description').value=t.description;$('amount').value=t.amount;$('category').value=t.category;$('date').value=t.date;$('formTitle').textContent='Edit transaksi';$('saveBtn').textContent='Simpan perubahan';$('cancelEdit').classList.remove('hidden');$('description').focus()}
+};
+['search','filterType','filterMonth','sortBy'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));
+$('saveGoal').onclick=async()=>{const n=Number($('goalInput').value);if(!Number.isFinite(n)||n<0){alert('Target tidak boleh negatif.');return}data.goal=Math.round(n);persist();render();if(client&&user){const {error}=await client.from('profiles').upsert({id:user.id,goal_amount:data.goal,updated_at:new Date().toISOString()});if(error)setStatus('Target tersimpan lokal, tetapi gagal dikirim ke cloud.','err');else setStatus('Target tabungan tersinkron.','ok')}};
+function download(content,name,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('backupBtn').onclick=()=>download(JSON.stringify({...data,exportedAt:new Date().toISOString(),format:'catatduit-backup-v1'},null,2),'backup-catatduit-'+today()+'.json','application/json');
+$('importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!obj||!Array.isArray(obj.transactions)||!obj.transactions.every(t=>t&&['income','expense'].includes(t.type)&&Number(t.amount)>0&&t.description))throw Error();if(!confirm(`Pulihkan ${obj.transactions.length} transaksi? Data lokal saat ini akan diganti.`))return;data={transactions:obj.transactions.map(t=>({...t,id:String(t.id||crypto.randomUUID?.()||Date.now()),amount:Math.round(Number(t.amount))})),goal:Math.max(0,Number(obj.goal)||0)};persist();resetForm();render();if(client&&user)await syncCloud();alert('Backup dipulihkan.')}catch(e){alert('File backup tidak valid.')}finally{e.target.value=''}};
+function modal(content){$('modalRoot').innerHTML=`<div class="modalback" id="modalback"><div class="modal">${content}</div></div>`;$('modalback').addEventListener('click',e=>{if(e.target.id==='modalback')closeModal()})}
+function closeModal(){$('modalRoot').innerHTML=''}
+function showSettings(){const c=config||{};modal(`<h2>Pengaturan sinkronisasi</h2><p>Cloud memakai project Supabase milikmu. URL dan publishable/anon key bukan password admin. Jangan pernah memasukkan service_role key di aplikasi.</p><div class="field"><label>Supabase Project URL</label><input id="cfgUrl" placeholder="https://xxxx.supabase.co" value="${esc(c.url||'')}"></div><div class="field"><label>Publishable key / anon public key</label><input id="cfgKey" placeholder="sb_publishable_... atau anon key" value="${esc(c.key||'')}"></div><div class="field"><label>Email akun</label><input id="authEmail" type="email" placeholder="email@example.com" value="${esc(c.email||'')}"></div><div class="field"><label>Password akun cloud</label><input id="authPass" type="password" placeholder="Password akun Supabase Auth"></div><p>Pastikan tabel dan kebijakan keamanan (SQL) sudah dibuat sesuai petunjuk README. Data tetap lokal sampai login dan sinkronisasi berhasil.</p><div class="modal-actions"><button id="closeSettings">Tutup</button><button id="saveCfg" class="primary">Simpan konfigurasi</button></div><div class="modal-actions"><button id="signIn">Daftar / Masuk</button><button id="signOut">Keluar</button></div>`);
+ $('closeSettings').onclick=closeModal;
+ $('saveCfg').onclick=()=>{const url=$('cfgUrl').value.trim().replace(/\/$/,''),key=$('cfgKey').value.trim(),email=$('authEmail').value.trim();if(!/^https:\/\/[a-zA-Z0-9.-]+$/.test(url)||!key){alert('Masukkan Project URL HTTPS dan publishable/anon key yang benar.');return}config={url,key,email};localStorage.setItem(CFG,JSON.stringify(config));initClient();setStatus('Konfigurasi tersimpan. Masuk untuk mulai sinkronisasi.');alert('Konfigurasi disimpan di browser ini. Ulangi pengaturan pada perangkat kedua.');}
+ $('signIn').onclick=async()=>{if(!client){alert('Simpan konfigurasi cloud terlebih dahulu.');return}const email=$('authEmail').value.trim(),password=$('authPass').value;if(!email||!password){alert('Isi email dan password.');return}config.email=email;localStorage.setItem(CFG,JSON.stringify(config));let result=await client.auth.signInWithPassword({email,password});if(result.error&&/invalid login credentials/i.test(result.error.message)){const reg=await client.auth.signUp({email,password});if(reg.error){alert('Daftar/masuk gagal: '+reg.error.message);return}if(!reg.data.session){alert('Pendaftaran berhasil. Cek email untuk konfirmasi, lalu masuk lagi. Jika konfirmasi email dimatikan, coba masuk sekarang.');return}result=reg}
+ if(result.error){alert('Gagal masuk: '+result.error.message);return}user=result.data.user;closeModal();await syncCloud();};
+ $('signOut').onclick=async()=>{if(client)await client.auth.signOut();user=null;setStatus('Keluar dari cloud. Data lokal tetap tersedia.');closeModal()};
+}
+async function initClient(){client=null;user=null;if(!config?.url||!config?.key||!window.supabase){setStatus('Mode lokal — hubungkan cloud untuk sinkronisasi HP dan laptop.');return}
+ try{client=window.supabase.createClient(config.url,config.key);const {data:res}=await client.auth.getSession();user=res.session?.user||null;client.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;if(user)syncCloud();else setStatus('Belum masuk cloud. Data lokal tetap tersedia.')});if(user)await syncCloud();else setStatus('Cloud terkonfigurasi, silakan masuk melalui Pengaturan cloud.')}catch(e){client=null;setStatus('Gagal memulai cloud: periksa URL dan key.','err')}
+}
+async function upsertOne(t){if(!client||!user)return;const row={id:t.id,user_id:user.id,type:t.type,description:t.description,amount:t.amount,category:t.category,date:t.date,created_at:new Date(t.createdAt||Date.now()).toISOString(),updated_at:t.updatedAt||new Date().toISOString()};const {error}=await client.from('transactions').upsert(row,{onConflict:'id'});if(error)setStatus('Catatan ada di perangkat, tetapi gagal sync. Periksa setup cloud.','err');else setStatus('Transaksi tersimpan dan tersinkron.','ok')}
+async function syncCloud(){
+ if(!client||!user){setStatus('Mode lokal — login cloud diperlukan untuk sinkronisasi.');return}if(syncing)return;syncing=true;setStatus('Sedang menyinkronkan…');
+ try{
+  const {data:remote,error}=await client.from('transactions').select('id,type,description,amount,category,date,created_at,updated_at').order('date',{ascending:false});
+  if(error)throw error;
+  const {data:prof,error:pe}=await client.from('profiles').select('goal_amount').eq('id',user.id).maybeSingle();if(pe)throw pe;
+  const remoteById=new Map((remote||[]).map(t=>[String(t.id),t])),localById=new Map(data.transactions.map(t=>[String(t.id),t]));
+  // Merge by ID; latest updated_at wins. This preserves offline-created records and then uploads them.
+  for(const r of (remote||[])){const l=localById.get(String(r.id));const rt=Date.parse(r.updated_at||r.created_at||0),lt=Date.parse(l?.updatedAt||l?.createdAt||0);if(!l||rt>=lt){const normalized={id:String(r.id),type:r.type,description:r.description,amount:Number(r.amount),category:r.category,date:r.date,createdAt:Date.parse(r.created_at||0)||Date.now(),updatedAt:r.updated_at||r.created_at||new Date().toISOString()};const idx=data.transactions.findIndex(t=>String(t.id)===String(r.id));if(idx>=0)data.transactions[idx]=normalized;else data.transactions.push(normalized)}}
+  const uploads=data.transactions.filter(t=>!remoteById.has(String(t.id))||Date.parse(t.updatedAt||t.createdAt||0)>Date.parse(remoteById.get(String(t.id))?.updated_at||remoteById.get(String(t.id))?.created_at||0));
+  if(uploads.length){const rows=uploads.map(t=>({id:t.id,user_id:user.id,type:t.type,description:t.description,amount:t.amount,category:t.category,date:t.date,created_at:new Date(t.createdAt||Date.now()).toISOString(),updated_at:t.updatedAt||new Date().toISOString()}));const {error:ue}=await client.from('transactions').upsert(rows,{onConflict:'id'});if(ue)throw ue}
+  if(prof&&Number.isFinite(Number(prof.goal_amount)))data.goal=Number(prof.goal_amount)||0;else{const {error:ge}=await client.from('profiles').upsert({id:user.id,goal_amount:data.goal,updated_at:new Date().toISOString()});if(ge)throw ge}
+  persist();render();setStatus(`Tersinkron dengan cloud · ${user.email||'akun aktif'}`,'ok');
+ }catch(e){setStatus('Sinkronisasi gagal: '+(e.message||'periksa koneksi, SQL, dan izin tabel.'),'err')}finally{syncing=false}
+}
+$('cloudSettings').onclick=showSettings;$('syncNow').onclick=syncCloud;
+window.addEventListener('online',()=>{if(client&&user)syncCloud()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&client&&user)syncCloud()});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+setType('income');render();initClient();
+})();
+</script>
+</body></html>
